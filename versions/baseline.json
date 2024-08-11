@@ -1,11 +1,4 @@
 {
-    "version": 1,
-    "default": {
-      "kind": "git",
-      "repository": "https://github.com/arsalan-anwari/vcpkg-registry.git",
-      "baseline": "6ef387282e1b9d5b76031a34be4cf88557b43b02",
-      "packages": [ "nvapi" ]
-    },
-    "registries": []
-  }
+    "default": {}
+}
   
