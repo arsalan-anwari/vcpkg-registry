@@ -1,6 +1,5 @@
 {
-    "name": "nvapi",
-    "version": "5.6.0",
-    "port-version": 1,
-    "dependencies": []
+  "name": "nvapi",
+  "version": "5.6.0",
+  "port-version": 1
 }
