@@ -3,7 +3,7 @@
         {
             "kind": "git",
             "repository": "https://github.com/arsalan-anwari/vcpkg-registry.git",
-            "baseline": "221fda918b1a5f8c5a6c62295ca51d1bba925f37",
+            "baseline": "ac1a4ecabe49fdaae90e406dac2c1ccdd1e37a0d",
             "packages": [ "nvapi" ]
         }
     ]
