@@ -1,5 +1,6 @@
 {
     "name": "nvapi",
-    "version-string": "1.0.0",
+    "version": "R560",
+    "port-version": 1,
     "dependencies": []
 }
