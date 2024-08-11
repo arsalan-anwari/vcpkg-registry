@@ -1,0 +1,9 @@
+{
+    "registries": [
+        {
+            "kind": "git",
+            "repository": "https://github.com/arsalan-anwari/vcpkg-registry.git",
+            "packages": [ "nvapi" ]
+        }
+    ]
+}
