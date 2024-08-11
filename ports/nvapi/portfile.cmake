@@ -21,7 +21,8 @@ foreach(header_file ${HEADER_FILES})
     file(COPY ${header_file} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 endforeach()
 
-# Copy the library file
+# Ensure the lib directory exists and copy the library file
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
 file(COPY ${LIB_DIR}/nvapi64.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 # Create the CMake configuration files
