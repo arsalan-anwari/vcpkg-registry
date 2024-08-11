@@ -1,7 +1,7 @@
 {
     "default": {
         "nvapi" : {
-            "baseline": "R560",
+            "baseline": "5.6.0",
             "port-version": 1
         }
     }
