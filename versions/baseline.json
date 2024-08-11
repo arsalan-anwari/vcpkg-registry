@@ -1,11 +1,10 @@
 {
     "version": 1,
-    "registries": [
-      {
-        "kind": "git",
-        "repository": "https://github.com/arsalan-anwari/vcpkg-registry.git",
-        "baseline": "221fda918b1a5f8c5a6c62295ca51d1bba925f37",
-        "packages": [ "nvapi" ]
-      }
-    ]
-}
+    "default": {
+      "kind": "git",
+      "repository": "https://github.com/arsalan-anwari/vcpkg-registry.git",
+      "baseline": "d1f53c8b1a2b3c4d56789ab123456789abcdef01"  // Replace with your tag's commit hash
+    },
+    "registries": []
+  }
+  
