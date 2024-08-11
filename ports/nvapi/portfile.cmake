@@ -49,15 +49,6 @@ endif()
 
 # Write files vcpkg directory
 
-set(NVAPI_PC_TEXT
-"prefix=${pcfiledir}/../..\n"
-"libdir=${prefix}/lib\n"
-"includedir=${prefix}/include\n\n"
-"Name: nvapi\n"
-"Description: NVAPI is NVIDIA's core software development kit that allows direct access to NVIDIA GPUs and drivers on all Windows platforms. NVAPI provides support for operations such as querying the installed driver version, enumerating GPUs and displays, monitoring GPU memory consumption, clocks, and temperature, DirectX and HLSL extensions, and more.\n"
-"Version: R560\n"
-)
-
 # Write the content to a file named 'copyright'
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/nvapi/copyright"
     "nvapi.lib and nvapi64.lib are licensed under the following terms:\n\n"
@@ -89,9 +80,9 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/nvapi/usage"
 
 # Write the content to a file named 'nvapi.pc'
 file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/nvapi.pc"
-    "prefix=${pcfiledir}/../..\n"
-    "libdir=${prefix}/lib\n"
-    "includedir=${prefix}/include\n\n"
+    "prefix=\{pcfiledir}/../..\n"
+    "libdir=\${prefix}/lib\n"
+    "includedir=\${prefix}/include\n\n"
     "Name: nvapi\n"
     "Description: NVAPI is NVIDIA's core software development kit that allows direct access to NVIDIA GPUs and drivers on all Windows platforms. NVAPI provides support for operations such as querying the installed driver version, enumerating GPUs and displays, monitoring GPU memory consumption, clocks, and temperature, DirectX and HLSL extensions, and more.\n"
     "Version: R560\n"
@@ -100,20 +91,20 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/nvapi.pc"
 
 # Create CMake configuration files
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/nvapi/nvapi-config.cmake"
-  "include(${CMAKE_CURRENT_LIST_DIR}/nvapi-targets.cmake)\n"
+  "include(\${CMAKE_CURRENT_LIST_DIR}/nvapi-targets.cmake)\n"
 )
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/nvapi/nvapi-targets.cmake"
   "# Compute the installation prefix relative to this file.\n"
-  "get_filename_component(_IMPORT_PREFIX \"${CMAKE_CURRENT_LIST_FILE}\" PATH)\n"
-  "get_filename_component(_IMPORT_PREFIX \"${_IMPORT_PREFIX}\" PATH)\n"
-  "get_filename_component(_IMPORT_PREFIX \"${_IMPORT_PREFIX}\" PATH)\n"
+  "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\n"
+  "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\n"
+  "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\n"
   "if(_IMPORT_PREFIX STREQUAL \"/\")\n"
   " set(_IMPORT_PREFIX \"\")\n"
   "endif()\n"
   "add_library(nvapi::nvapi STATIC IMPORTED)\n"
   "set_target_properties(nvapi::nvapi PROPERTIES\n" 
-    "IMPORTED_LOCATION \"${_IMPORT_PREFIX}/lib/nvapi64.lib\"\n"
-    "INTERFACE_INCLUDE_DIRECTORIES \"${_IMPORT_PREFIX}/include\"\n"
+    "IMPORTED_LOCATION \"\${_IMPORT_PREFIX}/lib/nvapi64.lib\"\n"
+    "INTERFACE_INCLUDE_DIRECTORIES \"\${_IMPORT_PREFIX}/include\"\n"
   ")\n"
 )
