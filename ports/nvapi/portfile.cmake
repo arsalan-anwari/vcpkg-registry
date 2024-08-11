@@ -7,11 +7,14 @@ vcpkg_from_github(
 )
 
 # Define the installation directories
-set(INSTALL_DIR ${SOURCE_PATH}/amd64)
 set(INCLUDE_DIR ${SOURCE_PATH})
+set(LIB_DIR ${SOURCE_PATH}/amd64)
 
 # Glob all header files in the root directory
 file(GLOB HEADER_FILES "${INCLUDE_DIR}/*.h")
+
+# Create the include directory in the Vcpkg installation
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
 
 # Copy all header files to the include directory in Vcpkg
 foreach(header_file ${HEADER_FILES})
@@ -19,7 +22,7 @@ foreach(header_file ${HEADER_FILES})
 endforeach()
 
 # Copy the library file
-file(COPY ${INSTALL_DIR}/nvapi64.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(COPY ${LIB_DIR}/nvapi64.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 # Create the CMake configuration files
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/nvapi/nvapiConfig.cmake
