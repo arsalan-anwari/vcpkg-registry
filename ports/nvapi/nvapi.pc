@@ -1,0 +1,7 @@
+prefix={pcfiledir}/../..
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: nvapi
+Description: NVAPI is NVIDIA's core software development kit that allows direct access to NVIDIA GPUs and drivers on all Windows platforms. NVAPI provides support for operations such as querying the installed driver version, enumerating GPUs and displays, monitoring GPU memory consumption, clocks, and temperature, DirectX and HLSL extensions, and more.
+Version: R560
