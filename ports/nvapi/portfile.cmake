@@ -20,3 +20,19 @@ endforeach()
 
 # Copy the library file
 file(COPY ${INSTALL_DIR}/nvapi64.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+
+# Create the CMake configuration files
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/nvapi/nvapiConfig.cmake
+[[
+include("${CMAKE_CURRENT_LIST_DIR}/nvapiTargets.cmake")
+]])
+
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/nvapi/nvapiTargets.cmake
+[[
+# Define the targets
+add_library(nvapi STATIC IMPORTED)
+set_target_properties(nvapi PROPERTIES
+    IMPORTED_LOCATION "${CURRENT_PACKAGES_DIR}/lib/nvapi64.lib"
+    INTERFACE_INCLUDE_DIRECTORIES "${CURRENT_PACKAGES_DIR}/include"
+)
+]])
