@@ -7,14 +7,15 @@ vcpkg_from_github(
 )
 
 # Ensure destination directories exist
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/nvapi/")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/nvapi")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/nvapi")
 
 # Install headers if they exist
 if(EXISTS "${SOURCE_PATH}/nvapi.h")
   file(INSTALL
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/nvapi"
     FILES
       ${SOURCE_PATH}/nvapi.h
       ${SOURCE_PATH}/NvApiDriverSettings.h
@@ -45,22 +46,77 @@ else()
   message(WARNING "Library file not found in ${SOURCE_PATH}/amd64")
 endif()
 
-# Create CMake configuration files
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/nvapi/nvapiConfig.cmake"
-  "include(CMakeFindDependencyMacro)\n"
-  "find_dependency(PkgConfig)\n"
-  "include(${CMAKE_CURRENT_LIST_DIR}/nvapiTargets.cmake)\n"
+
+# Define files to copy to vcpkg directory
+
+# Define the multi-line content for files created
+set(COPYRIGHT_TEXT
+"nvapi.lib and nvapi64.lib are licensed under the following terms:\n\n"
+"SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.\n"
+"SPDX-License-Identifier: MIT\n\n"
+"Permission is hereby granted, free of charge, to any person obtaining a\n"
+"copy of this software and associated documentation files (the \"Software\"),\n"
+"to deal in the Software without restriction, including without limitation\n"
+"the rights to use, copy, modify, merge, publish, distribute, sublicense,\n"
+"and/or sell copies of the Software, and to permit persons to whom the\n"
+"Software is furnished to do so, subject to the following conditions:\n\n"
+"The above copyright notice and this permission notice shall be included in\n"
+"all copies or substantial portions of the Software.\n\n"
+"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL\n"
+"THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\n"
+"FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER\n"
+"DEALINGS IN THE SOFTWARE.\n"
 )
 
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/nvapi/nvapiTargets.cmake"
+set(USAGE_TEXT
+"The package nvapi provides CMake targets:\n\n"
+"    find_package(nvapi CONFIG REQUIRED)\n"
+"    target_link_libraries(main PRIVATE nvapi::nvapi)\n"
+)
+
+set(NVAPI_PC_TEXT
+"prefix=${pcfiledir}/../..\n"
+"libdir=${prefix}/lib\n"
+"includedir=${prefix}/include\n\n"
+"Name: nvapi\n"
+"Description: NVAPI is NVIDIA's core software development kit that allows direct access to NVIDIA GPUs and drivers on all Windows platforms. NVAPI provides support for operations such as querying the installed driver version, enumerating GPUs and displays, monitoring GPU memory consumption, clocks, and temperature, DirectX and HLSL extensions, and more.\n"
+"Version: R560\n"
+)
+
+# Write the content to a file named 'copyright'
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/nvapi/copyright" "${COPYRIGHT_TEXT}")
+
+# Write the content to a file named 'usage'
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/nvapi/usage" "${USAGE_TEXT}")
+
+# Write the content to a file named 'nvapi.pc'
+file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/nvapi.pc" "${NVAPI_PC_TEXT}")
+
+
+# Create CMake configuration files
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/nvapi/nvapi-config.cmake"
+  "include(CMakeFindDependencyMacro)\n"
+  "find_dependency(PkgConfig)\n"
+  "include(${CMAKE_CURRENT_LIST_DIR}/nvapi-targets.cmake)\n"
+)
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/nvapi/nvapi-targets.cmake"
   "include(CMakeFindDependencyMacro)\n"
   "include(CMakePackageConfigHelpers)\n"
-  "include(CMakeFindDependencyMacro)\n"
-  "set_and_check(NVAPI_INCLUDE_DIRS \"${CURRENT_PACKAGES_DIR}/include\")\n"
-  "set_and_check(NVAPI_LIBRARIES \"${CURRENT_PACKAGES_DIR}/lib/nvapi64.lib\")\n"
-  "add_library(nvapi::nvapi UNKNOWN IMPORTED)\n"
-  "set_target_properties(nvapi::nvapi PROPERTIES\n"
-  "  INTERFACE_INCLUDE_DIRECTORIES \"${CURRENT_PACKAGES_DIR}/include\"\n"
-  "  IMPORTED_LOCATION \"${CURRENT_PACKAGES_DIR}/lib/nvapi64.lib\"\n"
-  ")\n"
+  "include(CMakeFindDependencyMacro)\n\n"
+  "# Compute the installation prefix relative to this file.\n"
+  "get_filename_component(_IMPORT_PREFIX \"${CMAKE_CURRENT_LIST_FILE}\" PATH)\n"
+  "get_filename_component(_IMPORT_PREFIX \"${_IMPORT_PREFIX}\" PATH)"
+  "get_filename_component(_IMPORT_PREFIX \"${_IMPORT_PREFIX}\" PATH)"
+  "if(_IMPORT_PREFIX STREQUAL \"/\")"
+  " set(_IMPORT_PREFIX \"\")"
+  "endif()"
+  "set_and_check(NVAPI_INCLUDE_DIRS \"${_IMPORT_PREFIX}/include/nvapi\")\n"
+  "set_and_check(NVAPI_LIBRARIES \"${_IMPORT_PREFIX}/lib/nvapi64.lib\")\n"
+  "add_library(nvapi::nvapi STATIC IMPORTED)\n"
+  "set_target_properties(nvapi::nvapi PROPERTIES IMPORTED_LOCATION \"${_IMPORT_PREFIX}/lib/nvapi64.lib\")\n"
+  "target_include_directories(nvapi::nvapi INTERFACE \"${_IMPORT_PREFIX}/include/nvapi\")\n"
 )
